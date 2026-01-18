@@ -217,7 +217,7 @@ def get_coordinates(city, country):
     else:
         raise ValueError(f"Could not find coordinates for {city}, {country}")
 
-def create_poster(city, country, point, dist, output_file, no_text=False):
+def create_poster(city, country, point, dist, output_file, no_text=False, square=False):
     print(f"\nGenerating map for {city}, {country}...")
     
     # Progress bar for data fetching
@@ -249,7 +249,8 @@ def create_poster(city, country, point, dist, output_file, no_text=False):
     
     # 2. Setup Plot
     print("Rendering map...")
-    fig, ax = plt.subplots(figsize=(12, 16), facecolor=THEME['bg'])
+    figsize = (12, 12) if square else (12, 16)
+    fig, ax = plt.subplots(figsize=figsize, facecolor=THEME['bg'])
     ax.set_facecolor(THEME['bg'])
     ax.set_position([0, 0, 1, 1])
     
@@ -373,6 +374,8 @@ Options:
   --theme, -t       Theme name (default: feature_based)
   --distance, -d    Map radius in meters (default: 29000)
   --list-themes     List all available themes
+  --square          Export a square (1:1) poster
+  --no-text         Export map without any text overlay
 
 Distance guide:
   4000-6000m   Small/dense cities (Venice, Amsterdam old center)
@@ -426,6 +429,7 @@ Examples:
     parser.add_argument('--theme', '-t', type=str, default='feature_based', help='Theme name (default: feature_based)')
     parser.add_argument('--distance', '-d', type=int, default=29000, help='Map radius in meters (default: 29000)')
     parser.add_argument('--list-themes', action='store_true', help='List all available themes')
+    parser.add_argument('--square', action='store_true', help='Export a square (1:1) poster')
     parser.add_argument('--no-text', action='store_true', help='Export map without any text overlay')
     
     args = parser.parse_args()
@@ -464,7 +468,15 @@ Examples:
     try:
         coords = get_coordinates(args.city, args.country)
         output_file = generate_output_filename(args.city, args.theme)
-        create_poster(args.city, args.country, coords, args.distance, output_file, no_text=args.no_text)
+        create_poster(
+            args.city,
+            args.country,
+            coords,
+            args.distance,
+            output_file,
+            no_text=args.no_text,
+            square=args.square,
+        )
         
         print("\n" + "=" * 50)
         print("✓ Poster generation complete!")

@@ -40,6 +40,8 @@ python create_map_poster.py --city <city> --country <country> [options]
 | `--country` | `-C` | Country name | required |
 | `--theme` | `-t` | Theme name | feature_based |
 | `--distance` | `-d` | Map radius in meters | 29000 |
+| `--square` | | Export a square (1:1) poster | false |
+| `--no-text` | | Export map without text overlay | false |
 | `--list-themes` | | List all available themes | |
 
 ### Examples
